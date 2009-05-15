@@ -148,7 +148,7 @@ module FireWatir
         $stdin.reopen File.new('/dev/null', 'r')
         exec("#{bin} -jssh #{profile_opt}")
       end
-      sleep options[:waitTime] || 2
+      sleep options[:waitTime] || 5
       
     end
     private :launch_browser
