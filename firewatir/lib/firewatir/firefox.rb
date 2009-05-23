@@ -219,6 +219,17 @@ module FireWatir
       result
     end
     
+    def set_cookie(domain, key, value)
+      jssh_command = <<EOF
+var comp = #{window_var}.Components;
+var cs = comp.classes["@mozilla.org/cookieService;1"].getService(comp.interfaces.nsICookieService);
+var ios = comp.classes["@mozilla.org/network/io-service;1"].getService(comp.interfaces.nsIIOService);
+var uri = ios.newURI("http://#{domain}/", null, null);
+cs.setCookieString(uri, null, "#{key}=#{value}", null);
+EOF
+      js_eval jssh_command
+    end
+    
     def delete_all_cookies
       jssh_command = <<EOF
 var comp = #{window_var}.Components;
