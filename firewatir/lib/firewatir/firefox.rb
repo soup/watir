@@ -238,6 +238,14 @@ EOF
       js_eval jssh_command
     end
     
+    def delete_cookie(domain, name, path = '/')
+      jssh_command = <<EOF
+var comp = #{window_var}.Components;
+comp.classes["@mozilla.org/cookiemanager;1"].getService(comp.interfaces.nsICookieManager).remove("#{domain}", "#{name}", "#{path}", false);
+EOF
+      js_eval jssh_command
+    end
+    
     def get_cookies_by_domain(domain)
       if (!domain.nil? && domain[0] != ".")
         domain = "." + domain
