@@ -541,8 +541,13 @@ EOF
       start = Time.now
       
       while isLoadingDocument != "false"
-        isLoadingDocument = js_eval("#{browser_var}=#{window_var}.getBrowser(); #{browser_var}.webProgress.isLoadingDocument;")
-        #puts "Is browser still loading page: #{isLoadingDocument}"
+        begin
+          isLoadingDocument = js_eval("#{browser_var}=#{window_var}.getBrowser(); #{browser_var}.webProgress.isLoadingDocument;")
+          #puts "Is browser still loading page: #{isLoadingDocument}"
+        rescue
+          # We lost the window, e.g. because of a popup that closed itself
+          return self
+        end
         
         # Raise an exception if the page fails to load
         if (Time.now - start) > 300
