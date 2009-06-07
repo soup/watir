@@ -189,7 +189,7 @@ module FireWatir
     def goto(url)
       get_window_number()
       set_browser_document()
-      js_eval "#{browser_var}.loadURI(\"#{url}\")"
+      js_eval "#{browser_var}.loadURI(\"#{escape_javascript(url)}\")"
       wait()
     end
     
@@ -1038,7 +1038,25 @@ EOF
     alias showFrames show_frames
 
     private
-
+    
+    JS_ESCAPE_MAP = {
+      '\\'    => '\\\\',
+      '</'    => '<\/',
+      "\r\n"  => '\n',
+      "\n"    => '\n',
+      "\r"    => '\n',
+      '"'     => '\\"',
+      "'"     => "\\'" }
+    
+    # Escape carrier returns and single and double quotes for JavaScript segments.
+    def escape_javascript(javascript)
+      if javascript
+        javascript.gsub(/(\\|<\/|\r\n|[\n\r"'])/) { JS_ESCAPE_MAP[$1] }
+      else
+        ''
+      end
+    end
+    
     def path_to_bin
       path = case current_os()
              when :windows
