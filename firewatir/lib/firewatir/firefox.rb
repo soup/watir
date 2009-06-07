@@ -366,9 +366,9 @@ EOF
     
     public
     #   Closes the window.
-    def close
+    def close(terminate=false)
       
-      if js_eval("getWindows().length").to_i == 1
+      if terminate || js_eval("getWindows().length").to_i == 1
         js_eval("getWindows()[0].close()")
         Process.kill("TERM", @browser_pid)
         
